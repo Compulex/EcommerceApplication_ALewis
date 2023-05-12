@@ -129,6 +129,9 @@ public class EcommerceService implements EcommerceServiceInterface{
     @Override
     public Product getProductById(long id){ return this.productRepository.findById(id).get(); }
 
+    @Override
+    public List<Product>getAllProducts(){ return this.productRepository.findAll(); }
+
     /**
      * updates a particular product
      * @param id

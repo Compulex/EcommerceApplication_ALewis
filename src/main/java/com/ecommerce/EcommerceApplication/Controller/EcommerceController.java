@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class EcommerceController {
     @Autowired
     EcommerceService ecommerceService;
@@ -91,27 +92,6 @@ public class EcommerceController {
     public void deleteUser(@PathVariable long id){
         this.ecommerceService.deleteUser(id);
     }
-/*
-    /**
-     * Adds product to cart
-     * @param uid user id
-     * @param pid product id
-     */
-    /*@PutMapping("user/{id}/product/{pid}")
-    public User postProductToCart(@PathVariable long uid, @PathVariable long pid){
-        return this.ecommerceService.addProductToCart(uid, pid);
-    }
-
-    /**
-     * Removes product from cart
-     * @param uid user id
-     * @param pid product id
-     */
-    /*@DeleteMapping("user/{uid}/product/{pid}")
-    public User deleteProductFromCart(@PathVariable long uid, @PathVariable long pid){
-        return this.ecommerceService.removeProductFromCart(uid, pid);
-    }
-*/
 
     /**
      * User paid all that was in cart
@@ -141,6 +121,9 @@ public class EcommerceController {
     public Product getProductById(@PathVariable long id){
         return this.ecommerceService.getProductById(id);
     }
+
+    @GetMapping("products")
+    public List<Product> getAllProducts(){ return this.ecommerceService.getAllProducts(); }
 
     @PutMapping("product/{id}")
     public Product updateProduct(@PathVariable long id, @RequestBody Product product){

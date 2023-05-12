@@ -24,6 +24,8 @@ public interface EcommerceServiceInterface {
 
     Product getProductById(long id);
 
+    List<Product> getAllProducts();
+
     Product updateProduct(long id, Product product);
 
     void deleteProduct(long id);
