@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -13,27 +14,25 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Product {
+@Table(name="orders")
+public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column
-    private String name;
+    private Date orderDate;
 
     @Column
-    private String description;
-
-    @Column
-    private double price;
+    private double orderTotal;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference(value = "user-order")
     @JoinColumn(name="userFK")
-    @JsonBackReference(value = "cart")
     private User user;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "product-op")
+    @JsonManagedReference(value = "order-op")
     private List<OrderedProduct> orderedProducts;
-
 }

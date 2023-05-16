@@ -2,26 +2,37 @@ package com.ecommerce.EcommerceApplication.Service;
 
 import com.ecommerce.EcommerceApplication.Exceptions.UnauthorizedUserException;
 import com.ecommerce.EcommerceApplication.Exceptions.UserExistsException;
+import com.ecommerce.EcommerceApplication.Model.Order;
+import com.ecommerce.EcommerceApplication.Model.OrderedProduct;
 import com.ecommerce.EcommerceApplication.Model.Product;
 import com.ecommerce.EcommerceApplication.Model.User;
+import com.ecommerce.EcommerceApplication.Repository.OrderRepository;
+import com.ecommerce.EcommerceApplication.Repository.OrderedProductRepository;
 import com.ecommerce.EcommerceApplication.Repository.ProductRepository;
 import com.ecommerce.EcommerceApplication.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class EcommerceService implements EcommerceServiceInterface{
-    private ProductRepository productRepository;
-    private UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+
+    private final OrderedProductRepository orderedProductRepository;
 
     @Autowired
-    public EcommerceService(ProductRepository productRepository, UserRepository userRepository){
+    public EcommerceService(ProductRepository productRepository, UserRepository userRepository,
+                            OrderRepository orderRepository, OrderedProductRepository orderedProductRepository){
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
+        this.orderedProductRepository = orderedProductRepository;
     }
 
     /**
@@ -91,10 +102,12 @@ public class EcommerceService implements EcommerceServiceInterface{
 
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
+        user.setPhoneNumber(updatedUser.getPhoneNumber());
         user.setEmail(updatedUser.getEmail());
         user.setUsername(updatedUser.getUsername());
         user.setPassword(updatedUser.getPassword());
         user.setProducts(updatedUser.getProducts());
+        user.setOrders(updatedUser.getOrders());
 
         return this.userRepository.save(user);
     }
@@ -145,49 +158,12 @@ public class EcommerceService implements EcommerceServiceInterface{
         product.setName(updatedProduct.getName());
         product.setDescription(updatedProduct.getDescription());
         product.setPrice(updatedProduct.getPrice());
+        product.setUser(updatedProduct.getUser());
+        product.setOrderedProducts(updatedProduct.getOrderedProducts());
 
-        return product;
-    }
-/*
-    /**
-     * Adds product
-     * @param uid
-     * @param pid
-     */
-    /*public User addProductToCart(long uid, long pid) {
-        User user = this.getUserById(uid);
-        Product product = this.getProductById(pid);
-
-        //add to cart
-        user.getProducts().add(product);
-        //add price to balance
-        user.setBalance(user.getBalance() + product.getPrice());
-
-        //set user in product
-        product.setUser(user);
-
-        return this.userRepository.save(user);
+        return this.productRepository.save(product);
     }
 
-    /**
-     * Removing product
-     * @param uid
-     * @param pid
-     */
-    /*public User removeProductFromCart(long uid, long pid) {
-        User user = this.getUserById(uid);
-        Product product = this.getProductById(pid);
-        //remove from list
-        user.getProducts().remove(product);
-        //deduct price from balance
-        user.setBalance(user.getBalance() - product.getPrice());
-
-        //remove user from product
-        product.setUser(null);
-
-        return this.userRepository.save(user);
-    }
-*/
     /**
      * remove a product
      * @param id id of product to delete
@@ -195,14 +171,73 @@ public class EcommerceService implements EcommerceServiceInterface{
     @Override
     public void deleteProduct(long id){ this.productRepository.delete(this.getProductById(id)); }
 
-    public User checkout(long id){
+
+    /**
+     * ***************** ORDER methods ******************
+     */
+
+    @Override
+    public Order addOrder(long uid, Order order){
+        User user = this.getUserById(uid);
+        //user.getOrders().add(order); //order added to list
+        order.setUser(user);
+        return this.orderRepository.save(order);
+    }
+
+    @Override
+    public Order getOrderById(long id){
+        return this.orderRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Order> getAllOrdersByUserId(long id){
         User user = this.getUserById(id);
+        return user.getOrders();
+    }
 
-        //clears the cart
-        user.setProducts(null);
-        //clears balance showing everything paid
-        user.setBalance(0.0);
+    @Override
+    public Order updateOrder(long id, Order updatedOrder){
+        Order order = this.orderRepository.findById(id).get();
 
-        return this.userRepository.save(user);
+        order.setOrderDate(updatedOrder.getOrderDate());
+        order.setUser(updatedOrder.getUser());
+        order.setOrderTotal(updatedOrder.getOrderTotal());
+        order.setOrderedProducts(updatedOrder.getOrderedProducts());
+
+        return this.orderRepository.save(order);
+    }
+
+    @Override
+    public void deleteOrder(long id){
+        this.orderRepository.delete(this.getOrderById(id));
+    }
+
+
+    /**
+     * ***************** ORDERED_PRODUCT methods ******************
+     */
+
+    @Override
+    public OrderedProduct addOrderedProduct(long pid, long oid, OrderedProduct orderedProduct){
+        Product product = this.getProductById(pid);
+        orderedProduct.setProduct(product);
+
+        Order order = this.getOrderById(oid);
+        orderedProduct.setOrder(order);
+
+        return this.orderedProductRepository.save(orderedProduct);
+    }
+
+    @Override
+    public List<OrderedProduct> getOrderedProductsByOrder(long oid){
+        List<OrderedProduct> ops = new ArrayList<>();
+
+        return this.orderedProductRepository.findAll();
+    }
+
+    @Override
+    public void deleteOrderedProduct(long id){
+        OrderedProduct orderedProduct = this.orderedProductRepository.findById(id).get();
+        this.orderedProductRepository.delete(orderedProduct);
     }
 }

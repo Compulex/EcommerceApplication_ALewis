@@ -3,6 +3,8 @@ package com.ecommerce.EcommerceApplication.Controller;
 
 import com.ecommerce.EcommerceApplication.Exceptions.UnauthorizedUserException;
 import com.ecommerce.EcommerceApplication.Exceptions.UserExistsException;
+import com.ecommerce.EcommerceApplication.Model.Order;
+import com.ecommerce.EcommerceApplication.Model.OrderedProduct;
 import com.ecommerce.EcommerceApplication.Model.Product;
 import com.ecommerce.EcommerceApplication.Model.User;
 import com.ecommerce.EcommerceApplication.Service.EcommerceService;
@@ -93,15 +95,6 @@ public class EcommerceController {
         this.ecommerceService.deleteUser(id);
     }
 
-    /**
-     * User paid all that was in cart
-     * @param id
-     */
-    @PatchMapping("user/{uid}/checkout")
-    public User checkout(@PathVariable long id){
-        return this.ecommerceService.checkout(id);
-    }
-
 
     /**
      * ********************* PRODUCT ENDPOINTS ***************************
@@ -133,5 +126,53 @@ public class EcommerceController {
     @DeleteMapping("product/{id}")
     public void deleteProduct(@PathVariable long id){ this.ecommerceService.deleteProduct(id); }
 
+    /**
+     * ********************* ORDER ENDPOINTS ***************************
+     */
 
+    @PostMapping("user/{id}/checkout")
+    public Order postOrder(@PathVariable long id, @RequestBody Order order){
+        return this.ecommerceService.addOrder(id, order);
+    }
+
+    @GetMapping("order/{id}")
+    public Order getOrderById(@PathVariable long id){
+        return this.ecommerceService.getOrderById(id);
+    }
+
+    @GetMapping("user/{id}/orders")
+    public List<Order> getOrdersByUserId(@PathVariable long id){
+        return this.ecommerceService.getAllOrdersByUserId(id);
+    }
+
+    @PutMapping("order/{id}")
+    public Order updateOrder(@PathVariable long id, @RequestBody Order order){
+        return this.ecommerceService.updateOrder(id, order);
+    }
+
+    @DeleteMapping("order/{id}")
+    public void deleteOrder(@PathVariable long id){
+        this.ecommerceService.deleteOrder(id);
+    }
+
+
+    /**
+     * ********************* ORDERED_PRODUCT ENDPOINTS ***************************
+     */
+
+    @PostMapping("product/{pid}/order/{oid}/orderedProduct")
+    public OrderedProduct postOrderedProduct(@PathVariable long pid, @PathVariable long oid,
+                                             @RequestBody OrderedProduct orderedProduct){
+        return this.ecommerceService.addOrderedProduct(pid, oid, orderedProduct);
+    }
+
+    @GetMapping("order/{oid}/orderedProducts")
+    public List<OrderedProduct> getAllOrderedProductsByOrder(@PathVariable long oid){
+        return this.ecommerceService.getOrderedProductsByOrder(oid);
+    }
+
+    @DeleteMapping("orderedProduct/{id}")
+    public void deleteOrderedProduct(@PathVariable long id){
+        this.ecommerceService.deleteOrderedProduct(id);
+    }
 }

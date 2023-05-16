@@ -1,6 +1,8 @@
 package com.ecommerce.EcommerceApplication.Service;
 
 import com.ecommerce.EcommerceApplication.Exceptions.UserExistsException;
+import com.ecommerce.EcommerceApplication.Model.Order;
+import com.ecommerce.EcommerceApplication.Model.OrderedProduct;
 import com.ecommerce.EcommerceApplication.Model.Product;
 import com.ecommerce.EcommerceApplication.Model.User;
 
@@ -19,7 +21,7 @@ public interface EcommerceServiceInterface {
 
     void deleteUser(long id);
 
-    //Product
+    //Product methods
     Product addProduct(Product product);
 
     Product getProductById(long id);
@@ -29,5 +31,23 @@ public interface EcommerceServiceInterface {
     Product updateProduct(long id, Product product);
 
     void deleteProduct(long id);
+
+    //Order methods
+    Order addOrder(long id, Order order);
+
+    Order getOrderById(long id);
+
+    List<Order> getAllOrdersByUserId(long id);
+
+    Order updateOrder(long id, Order order);
+
+    void deleteOrder(long id);
+
+    //OrderedProduct methods
+    OrderedProduct addOrderedProduct(long pid, long oid, OrderedProduct orderedProduct);
+
+    List<OrderedProduct> getOrderedProductsByOrder(long oid);
+
+    void deleteOrderedProduct(long id);
 
 }

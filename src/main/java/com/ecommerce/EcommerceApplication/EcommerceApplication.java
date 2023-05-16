@@ -19,16 +19,16 @@ public class EcommerceApplication {
 	@Bean
 	public CommandLineRunner cmd(ProductRepository productRepo){
 		return args -> {
-			Product product = new Product(1, "Cashews", "small bag of cashews unsalted", 0.50, null);
+			Product product = new Product(1, "Cashews", "small bag of cashews unsalted", 0.50, null, null);
 			productRepo.save(product);
 
-			product = new Product(2, "Water", "16 fl oz bottle of water", 1.00, null);
+			product = new Product(2, "Water", "16 fl oz bottle of water", 1.00, null, null);
 			productRepo.save(product);
 
-			product = new Product(3, "Almonds", "small bag of roasted almonds", 1.00, null);
+			product = new Product(3, "Almonds", "small bag of roasted almonds", 1.00, null, null);
 			productRepo.save(product);
 
-			product = new Product(4, "Sunflower Seeds - Original", "small bag of sunflower seeds", 1.50, null);
+			product = new Product(4, "Sunflower Seeds - Original", "small bag of sunflower seeds", 1.50, null, null);
 			productRepo.save(product);
 		};
 	}

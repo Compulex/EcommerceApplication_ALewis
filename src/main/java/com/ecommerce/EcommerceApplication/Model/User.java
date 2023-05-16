@@ -26,6 +26,9 @@ public class User {
     private String lastName;
 
     @Column
+    private String phoneNumber;
+
+    @Column
     private String email;
 
     @Column
@@ -38,7 +41,11 @@ public class User {
     private double balance = 0.0;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value = "cart")
     //user's cart
     private List<Product> products;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "user-order")
+    private List<Order> orders;
 }

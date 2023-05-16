@@ -43,6 +43,7 @@ class EcommerceApplicationTests {
 		User user = new User();
 		user.setFirstName("Jane");
 		user.setLastName("Doe");
+		user.setPhoneNumber("718-234-5690");
 		user.setEmail("jdoe24@gmail.com");
 		user.setUsername("jdoe24");
 		user.setPassword("password");
@@ -60,7 +61,7 @@ class EcommerceApplicationTests {
 	/**
 	 * Test for incorrect login given
 	 * Should return message: "User or password is incorrect. Try again"
-	 * @throws Exception
+	 * @throws Exception wrong password
 	 */
 	@Test
 	void incorrectLogin() throws Exception {
