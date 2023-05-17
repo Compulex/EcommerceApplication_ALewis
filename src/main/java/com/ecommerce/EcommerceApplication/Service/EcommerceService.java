@@ -1,5 +1,6 @@
 package com.ecommerce.EcommerceApplication.Service;
 
+import com.ecommerce.EcommerceApplication.EcommerceApplication;
 import com.ecommerce.EcommerceApplication.Exceptions.UnauthorizedUserException;
 import com.ecommerce.EcommerceApplication.Exceptions.UserExistsException;
 import com.ecommerce.EcommerceApplication.Model.Order;
@@ -51,6 +52,7 @@ public class EcommerceService implements EcommerceServiceInterface{
             throw new UserExistsException(new Date(), "Username already exists. Please choose a different one.");
         }
         else{
+            EcommerceApplication.log.info("EcommerceService added user: "+ user);
             return this.userRepository.save(user);
         }
 
@@ -109,6 +111,8 @@ public class EcommerceService implements EcommerceServiceInterface{
         user.setProducts(updatedUser.getProducts());
         user.setOrders(updatedUser.getOrders());
 
+        //EcommerceApplication.log.info("EcommerceService updated user: "+ user);
+
         return this.userRepository.save(user);
     }
 
@@ -131,6 +135,7 @@ public class EcommerceService implements EcommerceServiceInterface{
      */
     @Override
     public Product addProduct(Product product){
+        //EcommerceApplication.log.info("EcommerceService added product: "+ product);
         return this.productRepository.save(product);
     }
 
@@ -159,7 +164,9 @@ public class EcommerceService implements EcommerceServiceInterface{
         product.setDescription(updatedProduct.getDescription());
         product.setPrice(updatedProduct.getPrice());
         product.setUser(updatedProduct.getUser());
-        product.setOrderedProducts(updatedProduct.getOrderedProducts());
+        //product.setOrderedProduct(updatedProduct.getOrderedProduct());
+
+        EcommerceApplication.log.info("EcommerceService updated product: "+ product);
 
         return this.productRepository.save(product);
     }
@@ -179,8 +186,8 @@ public class EcommerceService implements EcommerceServiceInterface{
     @Override
     public Order addOrder(long uid, Order order){
         User user = this.getUserById(uid);
-        //user.getOrders().add(order); //order added to list
         order.setUser(user);
+
         return this.orderRepository.save(order);
     }
 
@@ -203,6 +210,8 @@ public class EcommerceService implements EcommerceServiceInterface{
         order.setUser(updatedOrder.getUser());
         order.setOrderTotal(updatedOrder.getOrderTotal());
         order.setOrderedProducts(updatedOrder.getOrderedProducts());
+
+        //EcommerceApplication.log.info("EcommerceService updated order: "+ order);
 
         return this.orderRepository.save(order);
     }
@@ -230,8 +239,6 @@ public class EcommerceService implements EcommerceServiceInterface{
 
     @Override
     public List<OrderedProduct> getOrderedProductsByOrder(long oid){
-        List<OrderedProduct> ops = new ArrayList<>();
-
         return this.orderedProductRepository.findAll();
     }
 

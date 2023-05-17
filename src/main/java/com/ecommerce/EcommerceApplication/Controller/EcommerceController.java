@@ -1,6 +1,7 @@
 package com.ecommerce.EcommerceApplication.Controller;
 
 
+import com.ecommerce.EcommerceApplication.EcommerceApplication;
 import com.ecommerce.EcommerceApplication.Exceptions.UnauthorizedUserException;
 import com.ecommerce.EcommerceApplication.Exceptions.UserExistsException;
 import com.ecommerce.EcommerceApplication.Model.Order;
@@ -9,6 +10,7 @@ import com.ecommerce.EcommerceApplication.Model.Product;
 import com.ecommerce.EcommerceApplication.Model.User;
 import com.ecommerce.EcommerceApplication.Service.EcommerceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -131,8 +133,17 @@ public class EcommerceController {
      */
 
     @PostMapping("user/{id}/checkout")
-    public Order postOrder(@PathVariable long id, @RequestBody Order order){
-        return this.ecommerceService.addOrder(id, order);
+    public ResponseEntity<Order> postOrder(@PathVariable long id, @RequestBody Order order){
+        Order addedOrder = this.ecommerceService.addOrder(id, order);
+
+        //update user by adding to list of orders
+        User user = this.ecommerceService.getUserById(id);
+        List<Order> orders = user.getOrders();
+        orders.add(addedOrder);
+        user.setOrders(orders);
+        this.ecommerceService.updateUser(id, user);
+
+        return ResponseEntity.ok(addedOrder);
     }
 
     @GetMapping("order/{id}")
@@ -161,9 +172,18 @@ public class EcommerceController {
      */
 
     @PostMapping("product/{pid}/order/{oid}/orderedProduct")
-    public OrderedProduct postOrderedProduct(@PathVariable long pid, @PathVariable long oid,
+    public ResponseEntity<OrderedProduct> postOrderedProduct(@PathVariable long pid, @PathVariable long oid,
                                              @RequestBody OrderedProduct orderedProduct){
-        return this.ecommerceService.addOrderedProduct(pid, oid, orderedProduct);
+        OrderedProduct addedOP = this.ecommerceService.addOrderedProduct(pid, oid, orderedProduct);
+
+        //order by adding list of ordered products
+        Order order = this.ecommerceService.getOrderById(oid);
+        List<OrderedProduct> orderOP = order.getOrderedProducts();
+        orderOP.add(addedOP);
+        order.setOrderedProducts(orderOP);
+        this.ecommerceService.updateOrder(oid, order);
+
+        return ResponseEntity.ok(addedOP);
     }
 
     @GetMapping("order/{oid}/orderedProducts")

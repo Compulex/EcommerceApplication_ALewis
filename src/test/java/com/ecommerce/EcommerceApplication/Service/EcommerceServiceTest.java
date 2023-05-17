@@ -17,8 +17,8 @@ class EcommerceServiceTest {
 
     @Test
     void getAllProducts(){
-        Product product1 = new Product(1L, "Cashews", "small bag of cashews unsalted", 0.50, null, null);
-        Product product2 = new Product(2L, "Water", "16 fl oz bottle of water", 1.00, null, null);
+        Product product1 = new Product(1L, "Cashews", "small bag of cashews unsalted", 0.50, null);
+        Product product2 = new Product(2L, "Water", "16 fl oz bottle of water", 1.00, null);
 
         when(this.ecommerceService.getAllProducts()).thenReturn(Arrays.asList(product1, product2));
 
@@ -28,7 +28,7 @@ class EcommerceServiceTest {
 
     @Test
     void deleteProduct() {
-        Product product = new Product(2L, "Water", "16 fl oz bottle of water", 1.00, null, null);
+        Product product = new Product(2L, "Water", "16 fl oz bottle of water", 1.00, null);
 
         this.ecommerceService.deleteProduct(product.getId());
 

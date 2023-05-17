@@ -23,7 +23,7 @@ public class OrderedProduct {
     @JsonBackReference(value = "order-op")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "productId")
     @JsonBackReference(value = "product-op")
     private Product product;

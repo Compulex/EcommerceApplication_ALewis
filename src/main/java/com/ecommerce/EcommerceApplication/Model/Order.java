@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Date;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -22,6 +25,7 @@ public class Order {
     private long id;
 
     @Column
+    @CreationTimestamp
     private Date orderDate;
 
     @Column

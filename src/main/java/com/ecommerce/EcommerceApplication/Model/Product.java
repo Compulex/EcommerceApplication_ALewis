@@ -32,8 +32,8 @@ public class Product {
     @JsonBackReference(value = "cart")
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    /*@OneToOne(fetch = FetchType.EAGER)
     @JsonManagedReference(value = "product-op")
-    private List<OrderedProduct> orderedProducts;
+    private OrderedProduct orderedProduct;*/
 
 }
